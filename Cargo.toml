@@ -1,0 +1,7 @@
+[package]
+name = "ale"
+version = "0.0.1"
+authors = ["Kai Sellgren <kaisellgren@gmail.com>"]
+
+[dependencies]
+regex = "0.1.27"
