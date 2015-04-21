@@ -7,25 +7,20 @@ use lexical_analysis::tokens::PunctuationKind;
 use lexical_analysis::tokens::PunctuationKind::*;
 use lexical_analysis::tokens::SpecialKind;
 use lexical_analysis::tokens::SpecialKind::*;
+use lexical_analysis::tokens::token_size;
 
 pub struct Lexer<'a> {
     position: usize,
-    data: &'a str,
-    tokens: Vec<Token>
+    tokens: Vec<Token>,
+    data: &'a str
 }
 
 impl<'a> Lexer<'a> {
     fn process_next(&mut self) {
         match self.peek().as_ref() {
             ";" => {
-                let comment: String = self.data
-                    .chars()
-                    .skip(self.position)
-                    .take_while(|c| !is_line_ending(c))
-                    .collect();
-
-                self.position += 1 + comment.len();
-                self.tokens.push(Token::Comment(comment));
+                let comment = self.take_string_while(|c| !is_line_ending(c));
+                self.push(Comment(comment));
             },
             "(" => self.push_punctuation(LeftParen),
             ")" => self.push_punctuation(RightParen),
@@ -33,24 +28,26 @@ impl<'a> Lexer<'a> {
             "]" => self.push_punctuation(RightBracket),
             "{" => self.push_punctuation(LeftBrace),
             "}" => self.push_punctuation(RightBrace),
-            ":" if self.peek_forward(1) == ":" => {
-                //self.push_punctuation();
-                self.position += 1;
-            },
+            ":" if self.peek_forward(1) == ":" => self.push_special(SignatureStart),
+            "-" if self.peek_forward(1) == ">" => self.push_special(SignatureArrow),
             "=" if self.peek_forward(1) != "=" => self.push_special(FunctionDefinition),
             c if is_identifier(c) => {
-                let name: String = self.data
-                    .chars()
-                    .skip(self.position)
-                    .take_while(|c| is_identifier(c.to_string().as_ref()))
-                    .collect();
-
-                self.position += name.len();
-                self.tokens.push(Identifier(name));
+                let name = self.take_string_while(|c| is_identifier(c.to_string().as_ref()));
+                self.push(Identifier(name));
             },
             c if should_ignore(c) => self.position += 1,
             c => panic!("Unexpected character: {}", c)
         };
+    }
+
+    fn take_string_while<P>(&self, predicate: P) -> String where
+        P: FnMut(&char) -> bool
+    {
+        self.data
+            .chars()
+            .skip(self.position)
+            .take_while(predicate)
+            .collect()
     }
 
     fn push_punctuation(&mut self, token: PunctuationKind) {
@@ -62,8 +59,8 @@ impl<'a> Lexer<'a> {
     }
 
     fn push(&mut self, token: Token) {
+        self.position += token_size(&token);
         self.tokens.push(token);
-        self.position += 1;
     }
 
     fn peek(&self) -> String {

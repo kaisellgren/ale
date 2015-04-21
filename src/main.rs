@@ -8,8 +8,6 @@ use std::io::prelude::*;
 use std::fs::File;
 
 fn main() {
-    println!("Lexing...");
-
     let mut data = String::new();
     let mut f = File::open("./src/test").unwrap();
     f.read_to_string(&mut data).unwrap();
