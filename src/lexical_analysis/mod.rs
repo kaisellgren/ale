@@ -7,6 +7,8 @@ use lexical_analysis::tokens::PunctuationKind;
 use lexical_analysis::tokens::PunctuationKind::*;
 use lexical_analysis::tokens::SpecialKind;
 use lexical_analysis::tokens::SpecialKind::*;
+use lexical_analysis::tokens::WhitespaceKind;
+use lexical_analysis::tokens::WhitespaceKind::*;
 use lexical_analysis::tokens::token_size;
 
 pub struct Lexer<'a> {
@@ -35,6 +37,8 @@ impl<'a> Lexer<'a> {
                 let name = self.take_string_while(|c| is_identifier(c.to_string().as_ref()));
                 self.push(Identifier(name));
             },
+            "\n" => self.push_whitespace(NewLine),
+            " " if self.peek_forward(3) == "   " => self.push_whitespace(Indentation),
             c if should_ignore(c) => self.position += 1,
             c => panic!("Unexpected character: {}", c)
         };
@@ -56,6 +60,10 @@ impl<'a> Lexer<'a> {
 
     fn push_special(&mut self, token: SpecialKind) {
         self.push(Special(token));
+    }
+
+    fn push_whitespace(&mut self, token: WhitespaceKind) {
+        self.push(Whitespace(token))
     }
 
     fn push(&mut self, token: Token) {

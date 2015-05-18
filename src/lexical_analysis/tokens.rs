@@ -1,6 +1,7 @@
 use lexical_analysis::tokens::Token::*;
 use lexical_analysis::tokens::LiteralKind::*;
 use lexical_analysis::tokens::SpecialKind::*;
+use lexical_analysis::tokens::WhitespaceKind::*;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Token {
@@ -9,7 +10,8 @@ pub enum Token {
     Punctuation(PunctuationKind),
     Comment(String),
     Literal(LiteralKind, String),
-    Special(SpecialKind)
+    Special(SpecialKind),
+    Whitespace(WhitespaceKind)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -38,6 +40,12 @@ pub enum SpecialKind {
     SignatureArrow
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum WhitespaceKind {
+    NewLine,
+    Indentation
+}
+
 /// Retrieves the full size of the token in the original input stream.
 pub fn token_size(token: &Token) -> usize {
     match token {
@@ -54,5 +62,9 @@ pub fn token_size(token: &Token) -> usize {
             &SignatureStart => 2,
             &SignatureArrow => 2
         },
+        &Whitespace(ref kind) => match kind {
+            &NewLine => 1,
+            &Indentation => 4
+        }
     }
 }
