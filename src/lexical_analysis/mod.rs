@@ -1,5 +1,6 @@
 pub mod tokens;
 
+use std::default::Default;
 use regex::Regex;
 use lexical_analysis::tokens::Token;
 use lexical_analysis::tokens::Token::*;
@@ -11,6 +12,7 @@ use lexical_analysis::tokens::WhitespaceKind;
 use lexical_analysis::tokens::WhitespaceKind::*;
 use lexical_analysis::tokens::token_size;
 
+#[derive(Default)]
 pub struct Lexer<'a> {
     position: usize,
     tokens: Vec<Token>,
@@ -18,6 +20,10 @@ pub struct Lexer<'a> {
 }
 
 impl<'a> Lexer<'a> {
+    fn new(data: &str) -> Lexer {
+        Lexer { data: data, ..Default::default() }
+    }
+
     fn process_next(&mut self) {
         match self.peek().as_ref() {
             ";" => {
@@ -81,11 +87,7 @@ impl<'a> Lexer<'a> {
 }
 
 pub fn lex(data: &str) -> Vec<Token> {
-    let mut lexer = Lexer {
-        data: data,
-        position: 0,
-        tokens: Vec::new()
-    };
+    let mut lexer = Lexer::new(data);
 
     while lexer.position < lexer.data.len() {
         lexer.process_next()
