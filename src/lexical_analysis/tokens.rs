@@ -2,7 +2,7 @@ use lexical_analysis::tokens::Token::*;
 use lexical_analysis::tokens::LiteralKind::*;
 use lexical_analysis::tokens::SpecialKind::*;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Token {
     Identifier(String),
     Keyword(String),
@@ -12,7 +12,7 @@ pub enum Token {
     Special(SpecialKind)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LiteralKind {
     StringLiteral,
     IntegerLiteral,
@@ -20,7 +20,7 @@ pub enum LiteralKind {
     BooleanLiteral
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PunctuationKind {
     Comma,
     LeftParen,
@@ -31,7 +31,7 @@ pub enum PunctuationKind {
     RightBrace
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SpecialKind {
     FunctionDefinition,
     SignatureStart,
