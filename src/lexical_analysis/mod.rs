@@ -22,7 +22,7 @@ impl<'a> Lexer<'a> {
         match self.peek().as_ref() {
             ";" => {
                 let comment = self.take_string_while(|c| !is_line_ending(c));
-                self.push(Comment(comment));
+                self.push(Comment(comment))
             },
             "(" => self.push_punctuation(LeftParen),
             ")" => self.push_punctuation(RightParen),
@@ -35,7 +35,7 @@ impl<'a> Lexer<'a> {
             "-" if self.peek_forward(1) == ">" => self.push_special(SignatureArrow),
             c if is_identifier(c) => {
                 let name = self.take_string_while(|c| is_identifier(c.to_string().as_ref()));
-                self.push(Identifier(name));
+                self.push(Identifier(name))
             },
             "\n" => self.push_whitespace(NewLine),
             " " if self.peek_forward(3) == "   " => self.push_whitespace(Indentation),
@@ -55,11 +55,11 @@ impl<'a> Lexer<'a> {
     }
 
     fn push_punctuation(&mut self, token: PunctuationKind) {
-        self.push(Punctuation(token));
+        self.push(Punctuation(token))
     }
 
     fn push_special(&mut self, token: SpecialKind) {
-        self.push(Special(token));
+        self.push(Special(token))
     }
 
     fn push_whitespace(&mut self, token: WhitespaceKind) {
@@ -68,7 +68,7 @@ impl<'a> Lexer<'a> {
 
     fn push(&mut self, token: Token) {
         self.position += token_size(&token);
-        self.tokens.push(token);
+        self.tokens.push(token)
     }
 
     fn peek(&self) -> String {
@@ -88,7 +88,7 @@ pub fn lex(data: &str) -> Vec<Token> {
     };
 
     while lexer.position < lexer.data.len() {
-        lexer.process_next();
+        lexer.process_next()
     }
 
     lexer.tokens
