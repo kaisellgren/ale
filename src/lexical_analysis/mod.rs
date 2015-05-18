@@ -78,7 +78,7 @@ impl<'a> Lexer<'a> {
     }
 
     fn peek(&self) -> String {
-        self.data.chars().skip(self.position).take(1).collect()
+        self.peek_forward(0)
     }
 
     fn peek_forward(&self, n: usize) -> String {
