@@ -30,9 +30,9 @@ impl<'a> Lexer<'a> {
             "]" => self.push_punctuation(RightBracket),
             "{" => self.push_punctuation(LeftBrace),
             "}" => self.push_punctuation(RightBrace),
+            "=" => self.push_punctuation(Equal),
             ":" if self.peek_forward(1) == ":" => self.push_special(SignatureStart),
             "-" if self.peek_forward(1) == ">" => self.push_special(SignatureArrow),
-            "=" if self.peek_forward(1) != "=" => self.push_special(FunctionDefinition),
             c if is_identifier(c) => {
                 let name = self.take_string_while(|c| is_identifier(c.to_string().as_ref()));
                 self.push(Identifier(name));

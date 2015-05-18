@@ -25,6 +25,7 @@ pub enum LiteralKind {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PunctuationKind {
     Comma,
+    Equal,
     LeftParen,
     RightParen,
     LeftBracket,
