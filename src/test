@@ -1,0 +1,12 @@
+; Just a comment here.
+:: Int -> Int -> Int
+sum x y = + x y
+
+:: Instance -> Effect ; Another comment :)
+;main i = println (str (sum 12 30))
+
+; Alternative way to write it with right associativity:
+; main i = println, str, sum 12 30
+
+; :: Any -> Any -> Any
+; :: O -> O -> O

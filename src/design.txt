@@ -1,0 +1,22 @@
+no objects. just ADT's with immutable fields.
+
+everything has to be immutable.
+
+no global scope. no singletons for accessing process params, instead an Instance type is passed to every program
+
+row polymorphism, return type poly, no subtyping
+
+hopefully type inference
+
+an ephemeral + incremental GC
+
+effect monads (Effect, IO and derived)
+
+monads, kleislis, functors, applicatives, etc.
+
+TODO:
+- # instead of :: for type sigs?
+
+ATOM:
+- alt for moving cursor camelhops
+- ctrl+q etc. navigation
